@@ -1,0 +1,24 @@
+﻿@model Experiment.Web.Models.Experiment
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+
+    <p>@Model.Something</p>
+
+    @Html.ActionLink("Switch to Module version 2", "SwitchModule", new { version = "2" })
+
+    @Html.ActionLink("Switch to Module version 1", "SwitchModule", new { version = "1" })
+</head>
+<body>
+    <div> 
+    </div>
+</body>
+</html>
