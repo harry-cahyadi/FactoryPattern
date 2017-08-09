@@ -47,8 +47,11 @@
     <Compile Include="Implementation\Factory.cs" />
     <Compile Include="Implementation\ModuleOne.cs" />
     <Compile Include="Implementation\ModuleTwo.cs" />
+    <Compile Include="Implementation\OtherModuleOne.cs" />
+    <Compile Include="Implementation\OtherModuleTwo.cs" />
     <Compile Include="Interface\IFactory.cs" />
     <Compile Include="Interface\IModule.cs" />
+    <Compile Include="Interface\IOtherModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

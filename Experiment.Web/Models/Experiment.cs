@@ -8,5 +8,7 @@ namespace Experiment.Web.Models
     public class Experiment
     {
         public string Something { get; set; }
+
+        public string SomethingElse { get; set; }
     }
 }

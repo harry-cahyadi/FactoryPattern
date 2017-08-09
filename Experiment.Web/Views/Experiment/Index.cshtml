@@ -1,4 +1,6 @@
-﻿@model Experiment.Web.Models.Experiment
+﻿@using Experiment.Web.Models;
+
+@model Experiment
 
 @{
     Layout = null;
@@ -10,15 +12,62 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>Index</title>
-
-    <p>@Model.Something</p>
-
-    @Html.ActionLink("Switch to Module version 2", "SwitchModule", new { version = "2" })
-
-    @Html.ActionLink("Switch to Module version 1", "SwitchModule", new { version = "1" })
 </head>
 <body>
-    <div> 
-    </div>
+    <p>@Model.Something</p>
+
+    <a id="switch-to-two" href="#">Switch to Module: 2, OtherModule: 2</a><br />
+    <a id="switch-to-one" href="#">Switch to Module: 1, OtherModule: 1</a><br />
+
+    <div id="dependency-list"></div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#switch-to-two").click(function (e) {
+                e.preventDefault();
+
+                var manifest = {
+                    Dependencies: [{
+                        Namespace: "Experiment.Lib.Interface.IModule,Experiment.Lib",
+                        Version: "2"
+                    }, {
+                        Namespace: "Experiment.Lib.Interface.IOtherModule,Experiment.Lib",
+                        Version: "2"
+                    }]
+                };
+
+                SwitchVersion(manifest);
+            });
+
+            $("#switch-to-one").click(function (e) {
+                e.preventDefault();
+
+                var manifest = {
+                    Dependencies: [{
+                        Namespace: "Experiment.Lib.Interface.IModule,Experiment.Lib",
+                        Version: "1"
+                    }, {
+                        Namespace: "Experiment.Lib.Interface.IOtherModule,Experiment.Lib",
+                        Version: "1"
+                    }]
+                };
+
+                SwitchVersion(manifest);
+            });
+
+            function SwitchVersion(manifest) {
+                $.ajax({
+                    url: "/Experiment/SwitchModule",
+                    method: "POST",
+                    data: manifest
+                }).done(function (response) {
+                    $("#dependency-list").text(JSON.stringify(response));
+                }).fail(function (response) {
+                    $("#dependency-list").text(JSON.stringify(response));
+                })
+            }
+        })
+    </script>
 </body>
 </html>

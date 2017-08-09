@@ -20,7 +20,16 @@ namespace Experiment.Lib.Implementation
             _producers = new Dictionary<string, InstanceProducer<T>>(StringComparer.OrdinalIgnoreCase);
         }
 
-        public T GetInstance(string version = "default") => _producers[version].GetInstance();
+        public T GetInstance(string version = "0")
+        {
+            var versions = DI.DependencyVersions;
+
+            // Checks whether the version was specified
+            if (version == "0")
+                version = versions[DI.GetDependencyNamespace<T>()];
+
+            return _producers[version].GetInstance();
+        }
 
         public void Register<TImplementation>(string version, Lifestyle lifestyle = null)
         where TImplementation : class, T

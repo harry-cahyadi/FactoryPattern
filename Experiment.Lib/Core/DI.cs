@@ -14,18 +14,43 @@ namespace Experiment.Lib.Core
             Container = container;
 
             // Registers all modules
-            var factory = new Factory<IModule>();
-            factory.Register<ModuleOne>("default");
-            factory.Register<ModuleOne>("1");
-            factory.Register<ModuleTwo>("2");
+            var moduleFactory = new Factory<IModule>();
+            moduleFactory.Register<ModuleOne>("0");
+            moduleFactory.Register<ModuleOne>("1");
+            moduleFactory.Register<ModuleTwo>("2");
 
-            // Registers the factory
-            //Container.RegisterSingleton(typeof(IFactory<>), typeof(Factory<>));
-            Container.RegisterSingleton<IFactory<IModule>>(factory);
+            // Registers all other modules
+            var otherModuleFactory = new Factory<IOtherModule>();
+            otherModuleFactory.Register<OtherModuleOne>("0");
+            otherModuleFactory.Register<OtherModuleOne>("1");
+            otherModuleFactory.Register<OtherModuleTwo>("2");
+
+            // Registers all factories
+            Container.RegisterSingleton<IFactory<IModule>>(moduleFactory);
+            Container.RegisterSingleton<IFactory<IOtherModule>>(otherModuleFactory);
         }
 
-        public static string DependencyVersion { get; set; } = "default";
+        public static IDictionary<string, string> DependencyVersions { get; set; } =
+            new Dictionary<string, string>() {
+                { GetDependencyNamespace<IModule>(), "0"},
+                { GetDependencyNamespace<IOtherModule>(), "1"}
+            };
+
+        public static string GetDependencyVersion<T>()
+            where T : class
+        {
+            return DependencyVersions != null ? DependencyVersions[GetDependencyNamespace<T>()] : "0";
+        }
 
         internal static Container Container { get; private set; }
+
+        internal static string GetDependencyNamespace<T>()
+            where T : class
+        {
+            var namespaceIncludingClassName = typeof(T).ToString();
+            var assemblyName = typeof(T).Assembly.GetName().Name;
+
+            return $"{namespaceIncludingClassName},{assemblyName}";
+        }
     }
 }
